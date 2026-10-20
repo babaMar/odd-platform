@@ -5,6 +5,7 @@ import org.opendatadiscovery.oddplatform.api.contract.api.DatasetFieldApi;
 import org.opendatadiscovery.oddplatform.api.contract.model.BulkEnumValueFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataSetFieldDescription;
 import org.opendatadiscovery.oddplatform.api.contract.model.DatasetFieldDescriptionUpdateFormData;
+import org.opendatadiscovery.oddplatform.api.contract.model.DatasetFieldLineage;
 import org.opendatadiscovery.oddplatform.api.contract.model.DatasetFieldTagsUpdateFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.DatasetFieldTermFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.EnumValueList;
@@ -15,6 +16,7 @@ import org.opendatadiscovery.oddplatform.api.contract.model.MetricSet;
 import org.opendatadiscovery.oddplatform.api.contract.model.Tag;
 import org.opendatadiscovery.oddplatform.service.DatasetFieldService;
 import org.opendatadiscovery.oddplatform.service.EnumValueService;
+import org.opendatadiscovery.oddplatform.service.FieldLineageService;
 import org.opendatadiscovery.oddplatform.service.MetricService;
 import org.opendatadiscovery.oddplatform.service.term.TermService;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class DatasetFieldController implements DatasetFieldApi {
     private final DatasetFieldService datasetFieldService;
+    private final FieldLineageService fieldLineageService;
     private final EnumValueService enumValueService;
     private final MetricService metricService;
     private final TermService termService;
@@ -75,6 +78,13 @@ public class DatasetFieldController implements DatasetFieldApi {
     public Mono<ResponseEntity<EnumValueList>> getEnumValues(final Long datasetFieldId,
                                                              final ServerWebExchange exchange) {
         return enumValueService.getEnumValues(datasetFieldId)
+            .map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<DatasetFieldLineage>> getDatasetFieldLineage(final Long datasetFieldId,
+                                                                            final ServerWebExchange exchange) {
+        return fieldLineageService.getDatasetFieldLineage(datasetFieldId)
             .map(ResponseEntity::ok);
     }
 

@@ -13,6 +13,7 @@ import org.opendatadiscovery.oddplatform.dto.DataSourceDto;
 import org.opendatadiscovery.oddplatform.dto.RelationshipDetailsDto;
 import org.opendatadiscovery.oddplatform.dto.RelationshipDto;
 import org.opendatadiscovery.oddplatform.dto.RelationshipTypeDto;
+import org.opendatadiscovery.oddplatform.model.tables.pojos.RelationshipsPojo;
 import org.opendatadiscovery.oddplatform.utils.Page;
 import org.springframework.stereotype.Component;
 
@@ -57,9 +58,7 @@ public class RelationshipMapper {
             .targetDataEntity(dataEntityMapper.mapRef(item.targetDataEntity()))
             .dataSource(dataSourceSafeMapper.mapDto(new DataSourceDto(item.dataSourcePojo(),
                 item.dataSourceNamespacePojo(), null)))
-            .type(RelationshipTypeDto.ERD.name().equals(item.relationshipPojo().getRelationshipType())
-                ? DataEntityRelationshipType.ENTITY_RELATIONSHIP
-                : DataEntityRelationshipType.GRAPH_RELATIONSHIP);
+            .type(mapType(item.relationshipPojo()));
     }
 
     public DataEntityRelationshipDetails mapToDatasetRelationshipDetails(final RelationshipDetailsDto item) {
@@ -71,12 +70,18 @@ public class RelationshipMapper {
             .targetDataEntity(dataEntityMapper.mapRef(item.targetDataEntity()))
             .dataSource(dataSourceSafeMapper.mapDto(new DataSourceDto(item.dataSourcePojo(),
                 item.dataSourceNamespacePojo(), null)))
-            .type(RelationshipTypeDto.ERD.name().equals(item.relationshipPojo().getRelationshipType())
-                ? DataEntityRelationshipType.ENTITY_RELATIONSHIP
-                : DataEntityRelationshipType.GRAPH_RELATIONSHIP)
+            .type(mapType(item.relationshipPojo()))
             .erdRelationship(
                 erdRelationshipMapper.mapPojoToDetails(item.erdRelationshipDetailsDto()))
             .graphRelationship(
                 graphRelationshipMapper.mapPojoToDetails(item.graphRelationshipPojo()));
+    }
+
+    private DataEntityRelationshipType mapType(final RelationshipsPojo relationship) {
+        return switch (RelationshipTypeDto.valueOf(relationship.getRelationshipType())) {
+            case ERD -> DataEntityRelationshipType.ENTITY_RELATIONSHIP;
+            case GRAPH -> DataEntityRelationshipType.GRAPH_RELATIONSHIP;
+            case FIELD_LINEAGE -> DataEntityRelationshipType.FIELD_LINEAGE_RELATIONSHIP;
+        };
     }
 }

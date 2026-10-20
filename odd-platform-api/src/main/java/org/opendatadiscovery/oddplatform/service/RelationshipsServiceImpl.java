@@ -1,5 +1,6 @@
 package org.opendatadiscovery.oddplatform.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityRelationshipDetails;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityRelationshipDetailsList;
@@ -18,13 +19,18 @@ public class RelationshipsServiceImpl implements RelationshipsService {
     private final ReactiveRelationshipsRepository relationshipsRepository;
     private final ReactiveDataEntityRelationshipRepository dataEntityRelationshipRepository;
     private final RelationshipMapper relationshipMapper;
+    private final FieldLineageService fieldLineageService;
 
     @Override
     public Mono<DataEntityRelationshipDetailsList> getRelationsByDatasetId(final Long dataEntityId,
                                                                            final RelationshipsType type) {
         return relationshipsRepository.getRelationsByDatasetIdAndType(dataEntityId, type)
             .collectList()
-            .map(relationshipMapper::mapListToRelationshipList);
+            .flatMap(dtos -> fieldLineageService.getRelationshipDetails(dtos).map(fieldLineage -> {
+                final DataEntityRelationshipDetailsList list = relationshipMapper.mapListToRelationshipList(dtos);
+                list.getItems().forEach(item -> item.setFieldLineageRelationship(fieldLineage.get(item.getId())));
+                return list;
+            }));
     }
 
     @Override
@@ -39,6 +45,15 @@ public class RelationshipsServiceImpl implements RelationshipsService {
         return relationshipsRepository.getRelationshipByIdAndType(relationshipId, RelationshipsType.ERD)
             .switchIfEmpty(Mono.error(() -> new NotFoundException("Relationship", relationshipId)))
             .map(relationshipMapper::mapToDatasetRelationshipDetails);
+    }
+
+    @Override
+    public Mono<DataEntityRelationshipDetails> getFieldLineageRelationshipById(final Long relationshipId) {
+        return relationshipsRepository.getRelationshipByIdAndType(relationshipId, RelationshipsType.FIELD_LINEAGE)
+            .switchIfEmpty(Mono.error(() -> new NotFoundException("Relationship", relationshipId)))
+            .flatMap(dto -> fieldLineageService.getRelationshipDetails(List.of(dto))
+                .map(fieldLineage -> relationshipMapper.mapToDatasetRelationshipDetails(dto)
+                    .fieldLineageRelationship(fieldLineage.get(dto.dataEntityRelationship().getId()))));
     }
 
     @Override

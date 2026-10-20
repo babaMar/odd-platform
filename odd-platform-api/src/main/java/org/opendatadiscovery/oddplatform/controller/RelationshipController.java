@@ -36,6 +36,14 @@ public class RelationshipController implements RelationshipApi {
 
     @Override
     public Mono<ResponseEntity<DataEntityRelationshipDetails>>
+        getFieldLineageRelationshipById(final Long relationshipId,
+                                        final ServerWebExchange exchange) {
+        return relationshipsService.getFieldLineageRelationshipById(relationshipId)
+            .map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<DataEntityRelationshipDetails>>
         getGraphRelationshipById(final Long relationshipId,
                                  final ServerWebExchange exchange) {
         return relationshipsService.getGraphRelationshipById(relationshipId)

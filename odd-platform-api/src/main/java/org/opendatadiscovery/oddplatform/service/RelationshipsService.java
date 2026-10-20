@@ -18,4 +18,6 @@ public interface RelationshipsService {
     Mono<DataEntityRelationshipDetails> getERDRelationshipById(final Long relationshipId);
 
     Mono<DataEntityRelationshipDetails> getGraphRelationshipById(final Long relationshipId);
+
+    Mono<DataEntityRelationshipDetails> getFieldLineageRelationshipById(final Long relationshipId);
 }

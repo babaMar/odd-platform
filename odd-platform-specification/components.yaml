@@ -4838,12 +4838,142 @@ components:
               $ref: '#/components/schemas/ERDRelationshipDetails'
             graph_relationship:
               $ref: '#/components/schemas/GraphRelationshipDetails'
+            field_lineage_relationship:
+              $ref: '#/components/schemas/FieldLineageRelationshipDetails'
 
     DataEntityRelationshipType:
       type: string
       enum:
         - ENTITY_RELATIONSHIP
         - GRAPH_RELATIONSHIP
+        - FIELD_LINEAGE_RELATIONSHIP
+
+    FieldLineageRelationshipDetails:
+      type: object
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLineageEdge'
+      required:
+        - edges
+
+    FieldLineageEdge:
+      type: object
+      description: The output field (target dataset) is derived from the input fields (source dataset)
+      properties:
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLineageFieldRef'
+        output:
+          $ref: '#/components/schemas/FieldLineageFieldRef'
+        expression:
+          type: string
+      required:
+        - inputs
+        - output
+
+    FieldLineageFieldRef:
+      type: object
+      description: >-
+        A dataset field referenced by field-level lineage. `field_id` and `data_entity_id` are absent when
+        the field or its dataset is not known to the platform (yet).
+      properties:
+        oddrn:
+          type: string
+        name:
+          type: string
+        field_id:
+          type: integer
+          format: int64
+          description: Id of the field's latest version
+        data_entity_id:
+          type: integer
+          format: int64
+        data_entity_name:
+          type: string
+      required:
+        - oddrn
+        - name
+
+    DatasetFieldLineage:
+      type: object
+      properties:
+        upstream:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetFieldLineageLink'
+        downstream:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetFieldLineageLink'
+      required:
+        - upstream
+        - downstream
+
+    DatasetFieldLineageLink:
+      type: object
+      properties:
+        field:
+          $ref: '#/components/schemas/FieldLineageFieldRef'
+        relationship_id:
+          type: integer
+          format: int64
+          description: Data entity id of the field lineage relationship establishing the link
+        expression:
+          type: string
+      required:
+        - field
+        - relationship_id
+
+    FieldLineageGraph:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLineageGraphNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldLineageGraphEdge'
+      required:
+        - nodes
+        - edges
+
+    FieldLineageGraphNode:
+      type: object
+      properties:
+        dataset_oddrn:
+          type: string
+        data_entity:
+          $ref: '#/components/schemas/DataEntityRef'
+        fields:
+          type: array
+          description: Fields of the dataset taking part in the graph's edges
+          items:
+            $ref: '#/components/schemas/FieldLineageFieldRef'
+      required:
+        - dataset_oddrn
+        - fields
+
+    FieldLineageGraphEdge:
+      type: object
+      properties:
+        source_field_oddrn:
+          type: string
+        target_field_oddrn:
+          type: string
+        relationship_id:
+          type: integer
+          format: int64
+        expression:
+          type: string
+      required:
+        - source_field_oddrn
+        - target_field_oddrn
+        - relationship_id
 
     ERDRelationshipDetails:
       type: object
@@ -4914,6 +5044,7 @@ components:
       enum:
         - ERD
         - GRAPH
+        - FIELD_LINEAGE
         - ALL
 
     GenAIRequest:

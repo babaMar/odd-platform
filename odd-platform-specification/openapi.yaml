@@ -1761,6 +1761,34 @@ paths:
       tags:
         - dataEntity
 
+  /api/dataentities/{data_entity_id}/lineage/fields:
+    get:
+      summary: Get DataEntity's field lineage graph
+      description: >-
+        Gets the field-level lineage graph around a dataset, following field lineage relationships
+        upstream and downstream up to lineage_depth datasets away
+      operationId: getDataEntityFieldLineage
+      parameters:
+        - $ref: './components.yaml/#/components/parameters/DataEntityIdParam'
+        - name: lineage_depth
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 5
+            default: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './components.yaml/#/components/schemas/FieldLineageGraph'
+      tags:
+        - dataEntity
+
   /api/dataentities/{data_entity_id}/alerts:
     get:
       summary: Get DataEntity's alerts
@@ -3060,6 +3088,23 @@ paths:
             application/json:
               schema:
                 $ref: './components.yaml/#/components/schemas/MetricSet'
+      tags:
+        - datasetField
+
+  /api/datasetfields/{dataset_field_id}/lineage:
+    get:
+      summary: Get field's lineage
+      description: Get the fields this field is derived from (upstream) and the fields derived from it (downstream)
+      operationId: getDatasetFieldLineage
+      parameters:
+        - $ref: './components.yaml/#/components/parameters/DatasetFieldIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './components.yaml/#/components/schemas/DatasetFieldLineage'
       tags:
         - datasetField
 
@@ -4814,6 +4859,23 @@ paths:
       summary: Get erd relationship by id
       description: Get information about DataSet's erd relationship for dataset by id
       operationId: getERDRelationshipById
+      parameters:
+        - $ref: './components.yaml/#/components/parameters/RelationshipIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './components.yaml/#/components/schemas/DataEntityRelationshipDetails'
+      tags:
+        - relationship
+
+  /api/relationships/field-lineage/{relationship_id}:
+    get:
+      summary: Get field lineage relationship by id
+      description: Get a field lineage relationship with its field-level edges
+      operationId: getFieldLineageRelationshipById
       parameters:
         - $ref: './components.yaml/#/components/parameters/RelationshipIdParam'
       responses:

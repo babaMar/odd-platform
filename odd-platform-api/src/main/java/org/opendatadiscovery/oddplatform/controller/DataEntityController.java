@@ -28,6 +28,7 @@ import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityStatus;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityStatusFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityTermFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.DataEntityUsageInfo;
+import org.opendatadiscovery.oddplatform.api.contract.model.FieldLineageGraph;
 import org.opendatadiscovery.oddplatform.api.contract.model.InternalDescription;
 import org.opendatadiscovery.oddplatform.api.contract.model.InternalDescriptionFormData;
 import org.opendatadiscovery.oddplatform.api.contract.model.InternalName;
@@ -52,6 +53,7 @@ import org.opendatadiscovery.oddplatform.service.AlertHaltConfigService;
 import org.opendatadiscovery.oddplatform.service.AlertService;
 import org.opendatadiscovery.oddplatform.service.DataEntityGroupService;
 import org.opendatadiscovery.oddplatform.service.DataEntityService;
+import org.opendatadiscovery.oddplatform.service.FieldLineageService;
 import org.opendatadiscovery.oddplatform.service.LineageService;
 import org.opendatadiscovery.oddplatform.service.MessageService;
 import org.opendatadiscovery.oddplatform.service.MetricService;
@@ -75,6 +77,7 @@ public class DataEntityController implements DataEntityApi {
     private final AlertService alertService;
     private final TermService termService;
     private final LineageService lineageService;
+    private final FieldLineageService fieldLineageService;
     private final ActivityService activityService;
     private final MessageService messageService;
     private final AlertHaltConfigService alertHaltConfigService;
@@ -260,6 +263,14 @@ public class DataEntityController implements DataEntityApi {
                                                                                   final ServerWebExchange exchange) {
         return lineageService
             .getLineage(dataEntityId, lineageDepth, expandedEntityIds, LineageStreamKind.DOWNSTREAM)
+            .map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<FieldLineageGraph>> getDataEntityFieldLineage(final Long dataEntityId,
+                                                                             final Integer lineageDepth,
+                                                                             final ServerWebExchange exchange) {
+        return fieldLineageService.getFieldLineageGraph(dataEntityId, lineageDepth != null ? lineageDepth : 1)
             .map(ResponseEntity::ok);
     }
 
