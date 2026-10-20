@@ -766,5 +766,6 @@
   "FIELD LINEAGE": "LINAJE DE CAMPOS",
   "No field lineage": "Sin linaje de campos",
   "Upstream fields": "Campos de origen",
-  "Downstream fields": "Campos derivados"
+  "Downstream fields": "Campos derivados",
+  "Fields": "Campos"
 }

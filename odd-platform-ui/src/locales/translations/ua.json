@@ -766,5 +766,6 @@
   "FIELD LINEAGE": "ПОХОДЖЕННЯ ПОЛЯ",
   "No field lineage": "Немає походження поля",
   "Upstream fields": "Висхідні поля",
-  "Downstream fields": "Низхідні поля"
+  "Downstream fields": "Низхідні поля",
+  "Fields": "Поля"
 }

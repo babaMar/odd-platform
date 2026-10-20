@@ -766,5 +766,6 @@
   "FIELD LINEAGE": "LIGNAGE DES CHAMPS",
   "No field lineage": "Aucun lignage de champs",
   "Upstream fields": "Champs en amont",
-  "Downstream fields": "Champs en aval"
+  "Downstream fields": "Champs en aval",
+  "Fields": "Champs"
 }

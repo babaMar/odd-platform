@@ -766,5 +766,6 @@
   "FIELD LINEAGE": "字段血缘",
   "No field lineage": "无字段血缘",
   "Upstream fields": "上游字段",
-  "Downstream fields": "下游字段"
+  "Downstream fields": "下游字段",
+  "Fields": "字段"
 }

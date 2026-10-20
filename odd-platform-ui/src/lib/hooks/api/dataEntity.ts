@@ -42,6 +42,20 @@ export function useDataEntityMetrics({
   });
 }
 
+export function useFieldLineageGraph({
+  dataEntityId,
+  lineageDepth,
+}: {
+  dataEntityId: number;
+  lineageDepth: number;
+}) {
+  return useQuery({
+    queryKey: ['fieldLineageGraph', dataEntityId, lineageDepth],
+    queryFn: () =>
+      dataEntityApi.getDataEntityFieldLineage({ dataEntityId, lineageDepth }),
+  });
+}
+
 export function useDataEntityGroupLineage({ dataEntityId }: { dataEntityId: number }) {
   return useQuery({
     queryKey: ['dataEntityGroupLineage', dataEntityId],

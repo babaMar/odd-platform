@@ -766,5 +766,6 @@
   "FIELD LINEAGE": "ԴԱՇՏԻ ԾԱԳՈՒՄ",
   "No field lineage": "Դաշտի ծագում չկա",
   "Upstream fields": "Վերին դաշտեր",
-  "Downstream fields": "Ստորին դաշտեր"
+  "Downstream fields": "Ստորին դաշտեր",
+  "Fields": "Դաշտեր"
 }
