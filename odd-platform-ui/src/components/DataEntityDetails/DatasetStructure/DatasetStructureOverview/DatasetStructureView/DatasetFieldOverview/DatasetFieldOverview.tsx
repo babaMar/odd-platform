@@ -10,6 +10,7 @@ import { useDataEntityRouteParams } from 'routes';
 import DatasetFieldHeader from './DatasetFieldHeader/DatasetFieldHeader';
 import DatasetFieldDescription from './DatasetFieldDescription/DatasetFieldDescription';
 import DatasetFieldTerms from './DatasetFieldTerms/DatasetFieldTerms';
+import DatasetFieldLineage from './DatasetFieldLineage/DatasetFieldLineage';
 import useStructure from '../../lib/useStructure';
 import DatasetFieldMetrics from './DatasetFieldMetrics/DatasetFieldMetrics';
 import DatasetFieldOverviewEnums from './DatasetFieldOverviewEnums/DatasetFieldOverviewEnums';
@@ -80,6 +81,7 @@ const DatasetFieldOverview: React.FC = () => {
         datasetFieldId={field.id}
         isStatusDeleted={isStatusDeleted}
       />
+      <DatasetFieldLineage datasetFieldId={field.id} />
       {field.metadata &&
         field.metadata?.length > 0 &&
         getOverviewSection(

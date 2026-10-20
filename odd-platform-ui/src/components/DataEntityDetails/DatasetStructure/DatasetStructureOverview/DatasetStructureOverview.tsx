@@ -18,11 +18,12 @@ import { datasetStructurePath, useDataEntityRouteParams } from 'routes';
 import DatasetStructureOverviewProvider from './lib/DatasetStructureOverviewProvider';
 import DatasetStructureSkeleton from './DatasetStructureSkeleton/DatasetStructureSkeleton';
 import DatasetStructureView from './DatasetStructureView/DatasetStructureView';
+import { initialSelectedFieldId } from './lib/initialSelectedFieldId';
 
 const DatasetStructureOverview: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { dataEntityId, versionId } = useDataEntityRouteParams();
+  const { dataEntityId, versionId, fieldId } = useDataEntityRouteParams();
 
   useEffect(() => {
     if (versionId) {
@@ -84,9 +85,10 @@ const DatasetStructureOverview: React.FC = () => {
       />
       {showStructure && (
         <DatasetStructureOverviewProvider
+          key={fieldId}
           datasetStructureRoot={datasetStructureRoot}
           datasetVersions={datasetVersions}
-          initialSelectedFieldId={datasetStructureRoot?.[0].id}
+          initialSelectedFieldId={initialSelectedFieldId(datasetStructureRoot, fieldId)}
           datasetFieldRowsCount={datasetStats?.rowsCount}
           datasetFieldFieldsCount={datasetStats?.fieldsCount}
           datasetFieldTypesCount={typesCount}

@@ -95,4 +95,7 @@ export { default as RelationshipListHeader } from './Relationships/RelationshipL
 export { RelationshipSkeleton } from './Relationships/RelationshipSkeleton';
 export { EntityRelationship } from './Relationships/RelationshipTypes/EntityRelationship';
 export { GraphRelationship } from './Relationships/RelationshipTypes/GraphRelationship';
+export { FieldLineageRelationship } from './Relationships/RelationshipTypes/FieldLineageRelationship';
+export { FieldLineageEdgesTable } from './Relationships/RelationshipTypes/FieldLineageEdgesTable';
+export { FieldLineageFieldLink } from './Relationships/FieldLineageFieldLink';
 export { OwnerRoleCell } from './Cell/OwnerRoleCell/OwnerRoleCell';

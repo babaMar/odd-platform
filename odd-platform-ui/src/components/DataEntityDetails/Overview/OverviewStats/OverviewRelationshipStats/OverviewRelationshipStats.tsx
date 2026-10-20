@@ -3,6 +3,7 @@ import { type DataEntityDetails } from 'generated-sources';
 import { DataEntityTypeNameEnum } from 'generated-sources';
 import OverviewEntityRelationship from './OverviewRelationshipType/OverviewEntityRelationship';
 import OverviewGraphRelationship from './OverviewRelationshipType/OverviewGraphRelationship';
+import OverviewFieldLineageRelationship from './OverviewRelationshipType/OverviewFieldLineageRelationship';
 
 interface OverviewRelationshipStatsProps {
   dataEntityDetails: DataEntityDetails;
@@ -16,6 +17,8 @@ const OverviewRelationshipStats: React.FC<OverviewRelationshipStatsProps> = ({
       return <OverviewEntityRelationship dataEntityDetails={dataEntityDetails} />;
     case DataEntityTypeNameEnum.GRAPH_RELATIONSHIP:
       return <OverviewGraphRelationship dataEntityDetails={dataEntityDetails} />;
+    case DataEntityTypeNameEnum.FIELD_LINEAGE_RELATIONSHIP:
+      return <OverviewFieldLineageRelationship dataEntityDetails={dataEntityDetails} />;
     default:
       return null;
   }

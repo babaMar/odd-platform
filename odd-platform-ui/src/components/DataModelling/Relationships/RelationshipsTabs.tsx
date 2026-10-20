@@ -21,6 +21,10 @@ const RelationshipsTabs = () => {
         name: t('Graph'),
         value: RelationshipsType.GRAPH,
       },
+      {
+        name: t('Field lineage'),
+        value: RelationshipsType.FIELD_LINEAGE,
+      },
     ],
     [t]
   );

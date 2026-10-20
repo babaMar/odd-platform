@@ -24,6 +24,13 @@ export function useDataSetFieldMetrics({ datasetFieldId }: UseDataEntityMetricsP
   });
 }
 
+export function useDatasetFieldLineage({ datasetFieldId }: UseDataEntityMetricsProps) {
+  return useQuery({
+    queryKey: ['datasetFieldLineage', datasetFieldId],
+    queryFn: async () => datasetFieldApiClient.getDatasetFieldLineage({ datasetFieldId }),
+  });
+}
+
 interface UseAddDatasetFieldTermParams {
   datasetFieldId: number;
   termId: number;

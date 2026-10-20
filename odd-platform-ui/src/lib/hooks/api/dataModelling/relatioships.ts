@@ -17,6 +17,14 @@ export function useGetGraphRelationshipById(relationshipId: number) {
   });
 }
 
+export function useGetFieldLineageRelationshipById(relationshipId: number) {
+  return useQuery({
+    queryKey: ['getFieldLineageRelationshipById', relationshipId],
+    queryFn: async () =>
+      relationshipApi.getFieldLineageRelationshipById({ relationshipId }),
+  });
+}
+
 export function useSearchRelationships({
   query,
   size,

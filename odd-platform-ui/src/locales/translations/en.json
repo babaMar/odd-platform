@@ -757,5 +757,14 @@
   "Result columns": "Result columns",
   "Reset to default": "Reset to default",
   "Last update in the source system for data entities; in the platform for terms and query examples": "Last update in the source system for data entities; in the platform for terms and query examples",
-  "The platform description, or the source description when none was written": "The platform description, or the source description when none was written"
+  "The platform description, or the source description when none was written": "The platform description, or the source description when none was written",
+  "Field edges:": "Field edges:",
+  "Output field": "Output field",
+  "Derived from": "Derived from",
+  "Expression": "Expression",
+  "Field lineage": "Field lineage",
+  "FIELD LINEAGE": "FIELD LINEAGE",
+  "No field lineage": "No field lineage",
+  "Upstream fields": "Upstream fields",
+  "Downstream fields": "Downstream fields"
 }

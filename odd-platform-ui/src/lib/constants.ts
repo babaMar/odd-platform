@@ -138,6 +138,10 @@ export const DataEntityClassTypeLabelMap: Map<
     TypeNameEnum.GRAPH_RELATIONSHIP,
     { normal: 'Graph Relationship', plural: 'Graph Relationships' },
   ],
+  [
+    TypeNameEnum.FIELD_LINEAGE_RELATIONSHIP,
+    { normal: 'Field Lineage Relationship', plural: 'Field Lineage Relationships' },
+  ],
   [TypeNameEnum.VECTOR_STORE, { normal: 'Vector store', plural: 'Vector stores' }],
   [TypeNameEnum.LOOKUP_TABLE, { normal: 'Lookup table', plural: 'Lookup tables' }],
 ]);

@@ -5,6 +5,7 @@ import { Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { EntityRelationship } from './RelationshipTypes/EntityRelationship';
 import { GraphRelationship } from './RelationshipTypes/GraphRelationship';
+import { FieldLineageRelationship } from './RelationshipTypes/FieldLineageRelationship';
 import * as Table from '../StyledComponents/Table';
 import EntityTypeItem from '../EntityTypeItem/EntityTypeItem';
 import AppPaper from '../AppPaper/AppPaper';
@@ -39,6 +40,15 @@ const RelationshipListItem = ({ relationshipDetails }: RelationshipListItemProps
               sourceDataEntity={relationshipDetails.sourceDataEntity}
               targetDataEntity={relationshipDetails.targetDataEntity}
               key={relationshipDetails.erdRelationship.erdRelationshipId}
+            />
+          </AppPaper>
+        )}
+        {relationshipDetails.fieldLineageRelationship && (
+          <AppPaper elevation={0} sx={theme => ({ p: theme.spacing(2), width: '100%' })}>
+            <FieldLineageRelationship
+              fieldLineageRelationship={relationshipDetails.fieldLineageRelationship}
+              sourceDataEntity={relationshipDetails.sourceDataEntity}
+              targetDataEntity={relationshipDetails.targetDataEntity}
             />
           </AppPaper>
         )}

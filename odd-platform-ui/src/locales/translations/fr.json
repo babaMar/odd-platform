@@ -757,5 +757,14 @@
   "Result columns": "Colonnes des résultats",
   "Reset to default": "Rétablir la valeur par défaut",
   "Last update in the source system for data entities; in the platform for terms and query examples": "Dernière mise à jour dans le système source pour les entités de données ; dans la plateforme pour les termes et les exemples de requête",
-  "The platform description, or the source description when none was written": "La description de la plateforme ou, à défaut, la description de la source"
+  "The platform description, or the source description when none was written": "La description de la plateforme ou, à défaut, la description de la source",
+  "Field edges:": "Liens de champs :",
+  "Output field": "Champ de sortie",
+  "Derived from": "Dérivé de",
+  "Expression": "Expression",
+  "Field lineage": "Lignage des champs",
+  "FIELD LINEAGE": "LIGNAGE DES CHAMPS",
+  "No field lineage": "Aucun lignage de champs",
+  "Upstream fields": "Champs en amont",
+  "Downstream fields": "Champs en aval"
 }

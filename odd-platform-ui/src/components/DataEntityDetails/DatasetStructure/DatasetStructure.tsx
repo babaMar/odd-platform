@@ -45,7 +45,7 @@ const DatasetStructure: FC = () => {
           }
         >
           <Route path=':versionId' />
-          <Route path='field/:fieldId' element={<Navigate to='overview' />} />
+          <Route path='field/:fieldId' />
         </Route>
         <Route path='compare' element={<DatasetStructureCompare />} />
         <Route path='' element={<Navigate to='overview' />} />
