@@ -16,6 +16,7 @@ import org.opendatadiscovery.oddplatform.mapper.ingestion.DatasetRelationIngesti
 import org.opendatadiscovery.oddplatform.model.tables.pojos.RelationshipsPojo;
 import org.opendatadiscovery.oddplatform.repository.reactive.ReactiveRelationshipsRepository;
 import org.opendatadiscovery.oddplatform.service.ERDRelationshipsIngestionService;
+import org.opendatadiscovery.oddplatform.service.FieldLineageIngestionService;
 import org.opendatadiscovery.oddplatform.service.GraphRelationshipsIngestionService;
 import org.opendatadiscovery.oddplatform.utils.Pair;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class RelationshipIngestionRequestProcessor implements IngestionRequestPr
     private final ReactiveRelationshipsRepository relationshipsRepository;
     private final ERDRelationshipsIngestionService erdIngestionService;
     private final GraphRelationshipsIngestionService graphIngestionService;
+    private final FieldLineageIngestionService fieldLineageIngestionService;
     private final DatasetRelationIngestionMapper relationIngestionMapper;
 
     @Override
@@ -69,10 +71,16 @@ public class RelationshipIngestionRequestProcessor implements IngestionRequestPr
                 final List<RelationshipsPojo> relationshipToUpdate =
                     relationshipPojoWithDetails.stream().map(Pair::getLeft).toList();
 
+                final Map<RelationshipTypeDto, List<Pair<RelationshipsPojo, DataRelationshipDetailsDto>>> byType =
+                    groupByType(relationshipPojoWithDetails);
+
                 return relationshipsRepository.bulkUpdate(relationshipToUpdate)
-                    .then(isErdRelationships(request)
-                        ? erdIngestionService.updateExistedERDRelationships(relationshipPojoWithDetails)
-                        : graphIngestionService.updateExistedGraphRelations(relationshipPojoWithDetails));
+                    .then(erdIngestionService.updateExistedERDRelationships(
+                        byType.getOrDefault(RelationshipTypeDto.ERD, List.of())))
+                    .then(graphIngestionService.updateExistedGraphRelations(
+                        byType.getOrDefault(RelationshipTypeDto.GRAPH, List.of())))
+                    .then(fieldLineageIngestionService.replaceEdges(
+                        byType.getOrDefault(RelationshipTypeDto.FIELD_LINEAGE, List.of())));
             });
     }
 
@@ -103,21 +111,21 @@ public class RelationshipIngestionRequestProcessor implements IngestionRequestPr
                     )
                 );
 
-                return isErdRelationships(request)
-                    ? erdIngestionService.createERDRelationships(relationshipPojoWithDetails)
-                    : graphIngestionService.createGraphRelations(relationshipPojoWithDetails);
+                final Map<RelationshipTypeDto, List<Pair<RelationshipsPojo, DataRelationshipDetailsDto>>> byType =
+                    groupByType(relationshipPojoWithDetails);
+
+                return erdIngestionService.createERDRelationships(
+                        byType.getOrDefault(RelationshipTypeDto.ERD, List.of()))
+                    .then(graphIngestionService.createGraphRelations(
+                        byType.getOrDefault(RelationshipTypeDto.GRAPH, List.of())))
+                    .then(fieldLineageIngestionService.replaceEdges(
+                        byType.getOrDefault(RelationshipTypeDto.FIELD_LINEAGE, List.of())));
             });
     }
 
-    private boolean isErdRelationships(final IngestionRequest request) {
-        if (request.getAllEntities().isEmpty()) {
-            return false;
-        }
-
-        return RelationshipTypeDto.ERD == request.getAllEntities().stream()
-            .filter(e -> e.getEntityClasses().contains(DataEntityClassDto.DATA_RELATIONSHIP))
-            .findFirst()
-            .map(item -> item.getDataRelationshipDto().relationshipType())
-            .orElse(null);
+    private Map<RelationshipTypeDto, List<Pair<RelationshipsPojo, DataRelationshipDetailsDto>>> groupByType(
+        final List<Pair<RelationshipsPojo, DataRelationshipDetailsDto>> relationshipPojoWithDetails) {
+        return relationshipPojoWithDetails.stream()
+            .collect(Collectors.groupingBy(item -> RelationshipTypeDto.valueOf(item.getLeft().getRelationshipType())));
     }
 }

@@ -21,6 +21,7 @@ import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.DATABASE_S
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.DOMAIN;
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.ENTITY_RELATIONSHIP;
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.FEATURE_GROUP;
+import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.FIELD_LINEAGE_RELATIONSHIP;
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.FILE;
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.GRAPH_NODE;
 import static org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto.GRAPH_RELATIONSHIP;
@@ -49,7 +50,7 @@ public enum DataEntityClassDto {
     DATA_CONSUMER(6, Set.of(ML_MODEL_ARTIFACT, DASHBOARD)),
     DATA_INPUT(7, API_CALL),
     DATA_ENTITY_GROUP(8, Set.of(ML_EXPERIMENT, ML_MODEL, DAG, DATABASE_SERVICE, API_SERVICE, KAFKA_SERVICE, DOMAIN)),
-    DATA_RELATIONSHIP(9, Set.of(ENTITY_RELATIONSHIP, GRAPH_RELATIONSHIP));
+    DATA_RELATIONSHIP(9, Set.of(ENTITY_RELATIONSHIP, GRAPH_RELATIONSHIP, FIELD_LINEAGE_RELATIONSHIP));
 
     private static final Map<Integer, DataEntityClassDto> MAP = Arrays.stream(DataEntityClassDto.values())
         .collect(Collectors.toMap(DataEntityClassDto::getId, identity()));

@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * because the internal enum lacked {@code ML_MODEL} — so both cases below are RED before the fix).
  */
 class IngestionMapperImplTest {
-    private final IngestionMapperImpl mapper = new IngestionMapperImpl(null, null, null, null);
+    private final IngestionMapperImpl mapper = new IngestionMapperImpl(null, null, null, null, null);
 
     @Test
     @DisplayName("ML_MODEL + data_entity_group ingests as the ML_MODEL group identity (1:1, #1725)")

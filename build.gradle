@@ -3,6 +3,10 @@ configure([project(':odd-platform-api-contract'), project(':odd-platform-api')])
 
     repositories {
         mavenCentral()
+        // unreleased ingestion contract (FIELD_LINEAGE) built locally; drop once on Maven Central
+        mavenLocal {
+            content { includeGroup 'org.opendatadiscovery' }
+        }
     }
 }
 

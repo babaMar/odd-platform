@@ -40,7 +40,9 @@ import static org.opendatadiscovery.oddplatform.model.Tables.DATA_ENTITY_TO_TERM
 import static org.opendatadiscovery.oddplatform.model.Tables.DATA_QUALITY_TEST_RELATIONS;
 import static org.opendatadiscovery.oddplatform.model.Tables.DATA_QUALITY_TEST_SEVERITY;
 import static org.opendatadiscovery.oddplatform.model.Tables.ENUM_VALUE;
+import static org.opendatadiscovery.oddplatform.model.Tables.ERD_RELATIONSHIP_DETAILS;
 import static org.opendatadiscovery.oddplatform.model.Tables.FILE;
+import static org.opendatadiscovery.oddplatform.model.Tables.GRAPH_RELATIONSHIP;
 import static org.opendatadiscovery.oddplatform.model.Tables.GROUP_ENTITY_RELATIONS;
 import static org.opendatadiscovery.oddplatform.model.Tables.GROUP_PARENT_GROUP_RELATIONS;
 import static org.opendatadiscovery.oddplatform.model.Tables.LINEAGE;
@@ -53,6 +55,7 @@ import static org.opendatadiscovery.oddplatform.model.Tables.METRIC_LABEL_VALUE;
 import static org.opendatadiscovery.oddplatform.model.Tables.METRIC_POINT;
 import static org.opendatadiscovery.oddplatform.model.Tables.METRIC_SERIES;
 import static org.opendatadiscovery.oddplatform.model.Tables.OWNERSHIP;
+import static org.opendatadiscovery.oddplatform.model.Tables.RELATIONSHIPS;
 import static org.opendatadiscovery.oddplatform.model.Tables.SEARCH_ENTRYPOINT;
 import static org.opendatadiscovery.oddplatform.model.Tables.TAG_TO_DATASET_FIELD;
 import static org.opendatadiscovery.oddplatform.model.Tables.TAG_TO_DATA_ENTITY;
@@ -115,6 +118,7 @@ public class DataEntityHousekeepingJob implements HousekeepingJob {
         deleteQTSeverity(dslContext, dataEntityIds);
         deleteQTRelations(dslContext, dataEntityOddrns);
         deleteFiles(dslContext, dataEntityIds);
+        deleteRelationships(dslContext, dataEntityIds);
 
         final List<DataEntityPojo> datasets = dataEntitiesToDelete.stream()
             .filter(this::isDataset)
@@ -339,7 +343,27 @@ public class DataEntityHousekeepingJob implements HousekeepingJob {
     private void deleteLineage(final DSLContext dslContext,
                                final List<String> dataEntityOddrns) {
         dslContext.deleteFrom(LINEAGE)
-            .where(LINEAGE.CHILD_ODDRN.in(dataEntityOddrns).or(LINEAGE.PARENT_ODDRN.in(dataEntityOddrns)))
+            .where(LINEAGE.CHILD_ODDRN.in(dataEntityOddrns)
+                .or(LINEAGE.PARENT_ODDRN.in(dataEntityOddrns))
+                .or(LINEAGE.ESTABLISHER_ODDRN.in(dataEntityOddrns)))
+            .execute();
+    }
+
+    private void deleteRelationships(final DSLContext dslContext,
+                                     final List<Long> dataEntityIds) {
+        final var relationshipIds = DSL.select(RELATIONSHIPS.ID)
+            .from(RELATIONSHIPS)
+            .where(RELATIONSHIPS.DATA_ENTITY_ID.in(dataEntityIds));
+
+        dslContext.deleteFrom(ERD_RELATIONSHIP_DETAILS)
+            .where(ERD_RELATIONSHIP_DETAILS.RELATIONSHIP_ID.in(relationshipIds))
+            .execute();
+        dslContext.deleteFrom(GRAPH_RELATIONSHIP)
+            .where(GRAPH_RELATIONSHIP.RELATIONSHIP_ID.in(relationshipIds))
+            .execute();
+        // field_lineage_edge rows go with ON DELETE CASCADE
+        dslContext.deleteFrom(RELATIONSHIPS)
+            .where(RELATIONSHIPS.DATA_ENTITY_ID.in(dataEntityIds))
             .execute();
     }
 

@@ -36,7 +36,8 @@ public enum DataEntityTypeDto {
     LOOKUP_TABLE(24),
     ENTITY_RELATIONSHIP(25),
     GRAPH_RELATIONSHIP(26),
-    ML_MODEL(27);
+    ML_MODEL(27),
+    FIELD_LINEAGE_RELATIONSHIP(28);
 
     private static final Map<Integer, DataEntityTypeDto> MAP = Arrays
         .stream(DataEntityTypeDto.values())

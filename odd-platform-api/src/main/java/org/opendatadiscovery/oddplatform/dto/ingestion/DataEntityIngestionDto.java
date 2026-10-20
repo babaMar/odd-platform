@@ -14,6 +14,7 @@ import org.opendatadiscovery.oddplatform.dto.RelationshipTypeDto;
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.DataSetFieldEnumValue;
 import org.opendatadiscovery.oddplatform.model.tables.pojos.DatasetFieldPojo;
 import org.opendatadiscovery.oddplatform.model.tables.pojos.ErdRelationshipDetailsPojo;
+import org.opendatadiscovery.oddplatform.model.tables.pojos.FieldLineageEdgePojo;
 import org.opendatadiscovery.oddplatform.model.tables.pojos.GraphRelationshipPojo;
 
 @Data
@@ -75,6 +76,7 @@ public class DataEntityIngestionDto {
     }
 
     public record DataRelationshipDetailsDto(ErdRelationshipDetailsPojo erdRelationshipDetailsPojo,
-                                             GraphRelationshipPojo graphRelationshipPojo) {
+                                             GraphRelationshipPojo graphRelationshipPojo,
+                                             List<FieldLineageEdgePojo> fieldLineageEdges) {
     }
 }

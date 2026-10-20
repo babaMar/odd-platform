@@ -20,6 +20,7 @@ import org.opendatadiscovery.oddplatform.dto.DataEntitySpecificAttributesDelta;
 import org.opendatadiscovery.oddplatform.dto.DataEntityStatusDto;
 import org.opendatadiscovery.oddplatform.dto.DataEntityTotalDelta;
 import org.opendatadiscovery.oddplatform.dto.DataEntityTypeDto;
+import org.opendatadiscovery.oddplatform.dto.RelationshipTypeDto;
 import org.opendatadiscovery.oddplatform.dto.ingestion.DataEntityIngestionDto;
 import org.opendatadiscovery.oddplatform.dto.ingestion.EnrichedDataEntityIngestionDto;
 import org.opendatadiscovery.oddplatform.dto.ingestion.IngestionRequest;
@@ -268,6 +269,15 @@ public class IngestionServiceImpl implements IngestionService {
                     .setChildOddrn(dtoOddrn)
                     .setEstablisherOddrn(dtoOddrn))
                 .forEach(result::add);
+        }
+
+        // field-level lineage implies the dataset-level edge it lives on
+        if (entityClasses.contains(DataEntityClassDto.DATA_RELATIONSHIP)
+            && dto.getDataRelationshipDto().relationshipType() == RelationshipTypeDto.FIELD_LINEAGE) {
+            result.add(new LineagePojo()
+                .setParentOddrn(dto.getDataRelationshipDto().sourceOddrn())
+                .setChildOddrn(dto.getDataRelationshipDto().targetOddrn())
+                .setEstablisherOddrn(dtoOddrn));
         }
 
         return result;

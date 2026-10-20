@@ -39,6 +39,7 @@ import org.opendatadiscovery.oddplatform.ingestion.contract.model.DataSetFieldTy
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.DataTransformer;
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.DataTransformerRun;
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.ERDRelationship;
+import org.opendatadiscovery.oddplatform.ingestion.contract.model.FieldLineageRelationship;
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.GraphRelationship;
 import org.opendatadiscovery.oddplatform.ingestion.contract.model.Tag;
 import org.opendatadiscovery.oddplatform.model.tables.pojos.DataEntityPojo;
@@ -88,6 +89,7 @@ public class IngestionMapperImpl implements IngestionMapper {
     private final DatasetFieldIngestionMapper datasetFieldIngestionMapper;
     private final DatasetERDRelationIngestionMapper erdRelationIngestionMapper;
     private final DatasetGraphRelationIngestionMapper graphRelationIngestionMapper;
+    private final FieldLineageIngestionMapper fieldLineageIngestionMapper;
     private final DatasetVersionHashCalculator datasetVersionHashCalculator;
 
     private static final List<Pair<Predicate<DataEntity>, DataEntityClassDto>> ENTITY_CLASS_DISCRIMINATOR = List.of(
@@ -311,14 +313,14 @@ public class IngestionMapperImpl implements IngestionMapper {
     }
 
     private DataRelationshipDto createDataRelationship(final DataRelationship relationship) {
-        final DataRelationshipDetailsDto dataRelationshipDetailsDto =
-            DataRelationship.RelationshipTypeEnum.ERD == relationship.getRelationshipType()
-                ? new DataRelationshipDetailsDto(
-                    erdRelationIngestionMapper.mapERDRelation((ERDRelationship) relationship.getDetails()),
-                    null)
-                : new DataRelationshipDetailsDto(
-                null,
-                graphRelationIngestionMapper.mapGraphRelation((GraphRelationship) relationship.getDetails()));
+        final DataRelationshipDetailsDto dataRelationshipDetailsDto = switch (relationship.getRelationshipType()) {
+            case ERD -> new DataRelationshipDetailsDto(
+                erdRelationIngestionMapper.mapERDRelation((ERDRelationship) relationship.getDetails()), null, null);
+            case GRAPH -> new DataRelationshipDetailsDto(null,
+                graphRelationIngestionMapper.mapGraphRelation((GraphRelationship) relationship.getDetails()), null);
+            case FIELD_LINEAGE -> new DataRelationshipDetailsDto(null, null,
+                fieldLineageIngestionMapper.mapEdges((FieldLineageRelationship) relationship.getDetails()));
+        };
 
         return new DataRelationshipDto(
             relationship.getSourceDatasetOddrn(),

@@ -1335,6 +1335,7 @@ components:
             - LOOKUP_TABLE
             - ENTITY_RELATIONSHIP
             - GRAPH_RELATIONSHIP
+            - FIELD_LINEAGE_RELATIONSHIP
       required:
         - id
         - name
